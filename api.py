@@ -23,10 +23,11 @@ async def get_book_by_isbn(offset: int, limit: int, db: Session = Depends(get_db
     query = text(f"""
         SELECT data
         FROM scrapy_items
-		OFFSET 350
-        LIMIT 100
+		OFFSET :offset
+        LIMIT :limit
     """)
-    return db.execute(query).fetchall()
+    result = db.execute(query, {'offset': offset, 'limit': limit})
+    return [row._asdict() for row in result]
 
 
 if __name__ == "__main__":
